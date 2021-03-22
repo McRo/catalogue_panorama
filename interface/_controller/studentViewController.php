@@ -11,9 +11,13 @@
 
 
     ////////////////////////////////////////FAKE INITIALISATION////////////////////
+<<<<<<< HEAD
     $_SESSION['idStudent']  = 1;
 
 
+=======
+    // $_SESSION['idStudent']  = 1;
+>>>>>>> ath and create new user
     $session_artwork_obj = ArtworkService::searchBy($_SESSION['idStudent']);
     $list_of_updates    = UpdateService::searchByAwId($session_artwork_obj->getId());
     
