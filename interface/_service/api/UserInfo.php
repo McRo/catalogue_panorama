@@ -7,19 +7,20 @@
             global $user_search_url;
 
             // set headers GET
-            $headers = 'Content-Type: application/json';
+            $headers = ['Content-Type: application/json'];
 
             // add token if not empty (to have full user infos)
-            if ($_SESSION['token'])
-				        array_push($headers, "Authorization: JWT ".$_SESSION['token']);
+            if ($_SESSION['token']){
+                array_push($headers, "Authorization: JWT ".$_SESSION['token']);
+            }
 
             // init curl
             $curl = curl_init();
-      			curl_setopt($curl, CURLOPT_URL, $user_search_url.$email);
-      			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-      			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
             // put headers
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($curl, CURLOPT_URL, $user_search_url.$email);
 
             // execute curl
 			      $response_json = curl_exec($curl);
@@ -35,6 +36,7 @@
             // set vars
 
             return $response;
+
 
 
         }
