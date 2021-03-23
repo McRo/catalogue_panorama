@@ -19,7 +19,7 @@
             }
         }
 
-        //search all student 
+        //search all students 
         public function searchAll(){
             try{
 
@@ -32,8 +32,8 @@
             }
         }
 
-        //search one student
-        public function searchBy(Int $idStudent){
+        //search one student by its id
+        public static function searchBy(Int $idStudent){
             try{
                 $dao = new StudentDAO();
                 //catch a tab of one row, i.e the student looked for
@@ -44,7 +44,11 @@
             }
         }
 
+<<<<<<< HEAD
         //search one student
+=======
+        //search one student by id user
+>>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
         public function searchByUser(Int $idUser){
             try{
                 $dao = new StudentDAO();
@@ -56,6 +60,22 @@
             }
         }
 
+<<<<<<< HEAD
+=======
+        //search one student by its artwork id
+        public static function searchByArtwork($idArtwork){
+            try{
+                $dao = new StudentDAO();
+                //catch a tab of one row, i.e the student looked for
+                return $dao->searchByArtwork($idArtwork);
+
+            }catch(DAOException $serviceException){
+                throw new ServiceException($serviceException->getMessage(), $serviceException->getCode());
+            }
+        }
+
+
+>>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
         // public function update(Object $objet, int $idOdbjectToModify){
 
         // }

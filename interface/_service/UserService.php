@@ -4,7 +4,7 @@
     require_once(__DIR__.'/../exception/ServiceException.php');
 
     class UserService {
-        
+
         //add new user
         public static function create(Object $user){
 
@@ -19,14 +19,27 @@
             }
         }
 
-        //serach all users 
+        //serach all users
         public function searchAll(){
             try{
 
                 $dao = new UserDAO();
                 //catch a tab of all users in the database
                 return $dao->searchAll();
-                
+
+            }catch(DAOException $serviceException){
+                throw new ServiceException($serviceException->getMessage(), $serviceException->getCode());
+            }
+        }
+
+        //search all users that are students
+        public static function searchAllStudents(){
+            try{
+
+                $dao = new UserDAO();
+                //catch a tab of all users in the database
+                return $dao->searchAllStudents();
+
             }catch(DAOException $serviceException){
                 throw new ServiceException($serviceException->getMessage(), $serviceException->getCode());
             }

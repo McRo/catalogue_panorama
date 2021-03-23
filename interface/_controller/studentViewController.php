@@ -9,36 +9,38 @@
     require_once(__DIR__.'/../_class/Artwork.php');
     require_once(__DIR__.'/../_class/Update.php');
 
+    session_start();
+    //redirection if not connected or don't have access
+    if (!$_SESSION) {
+        header('location: ../_controller/connectionViewController.php?logout');
+    }
+    elseif($_SESSION['profil']!="is_student"){
+        header('location: ../_controller/connectionViewController.php?logout');
+    }
 
     ////////////////////////////////////////FAKE INITIALISATION////////////////////
-<<<<<<< HEAD
-    $_SESSION['idStudent']  = 1;
-
-
-=======
     // $_SESSION['idStudent']  = 1;
->>>>>>> ath and create new user
     $session_artwork_obj = ArtworkService::searchBy($_SESSION['idStudent']);
     $list_of_updates    = UpdateService::searchByAwId($session_artwork_obj->getId());
-    
+
     //display the global html
-    html('Catalogue Panorama - Artiste');
+    html('Catalogue Panorama - Artiste', null, null, null);
 
     //form for creation and update
     formCreateArtwork($session_artwork_obj);
 
     //list of updates done by the student
     updatesList($list_of_updates);
-    
+
     //display the scripts
     scripts('countdown');
 
-    
+
 
     //check if there is any information on the url
     if(isset($_GET) && !empty($_GET)){
 
-        
+
         if( isset($_GET['action']) && !empty($_GET['action']) && isset($_POST)   &&  !empty($_POST)){
                 //Convert all applicable characters to HTML entities
                 $title          = htmlentities($_POST['title']);
@@ -48,15 +50,15 @@
                 $short_syn   = htmlentities($_POST['short_synopsis']);
                 $long_syn    = htmlentities($_POST['long_synopsis']);
                 $thnaks    = htmlentities($_POST['thanks']);
-            
+
                 //if it's a creation
             if($_GET['action']=="create"){
-                
+
                 //set automatically the current date and seen = false
                 date_default_timezone_set("Europe/Paris");
                 $created_date   = date("Y-m-d");
                 $seen = 0;
-                
+
                 //catch idStudent
                 $id_student     = $_SESSION['idStudent'];
 
@@ -66,9 +68,9 @@
                     ->setSynopsisShort($short_syn)->setSynopsisLong($long_syn)
                     ->setThanks($thnaks)
                     ->setCreatedAt($created_date)->setIdStudent($id_student)->setSeen($seen);
-                
+
                 try{
-                    //send the request throw several layer. 
+                    //send the request throw several layer.
                     //can catch a success if operation happened well - to display a success alert 1=success 0=fail
                    $success=ArtworkService::create($aw);
                    echo $success;
@@ -77,20 +79,20 @@
                     echo $ServiceException->getCode();
                 }
             }
-            
-            
+
+
             //if it's an update
             elseif($_GET['action']=="edit"){
                 //keep only the comparable values (not id, created_at, id_student and seen)
                 $old_content_array = array_slice((array) $session_artwork_obj, 1, 8);
                 $new_content_array = [$title, $subtitle, $type, $duration, $short_fr_syn, $long_fr_syn, $short_en_syn, $long_en_syn];
-                
+
                 try{
-                    
+
                     //create updates obj
                     $i=0;
                     foreach($old_content_array as $value){
-                        
+
                         if($value != $new_content_array[$i]){
                             $input_name = preg_replace('/artwork/i', "", array_search($value, $old_content_array));
                             $old_content    =   $value;
@@ -117,11 +119,7 @@
                 }catch(ServiceException $serviceException){
                     echo $ServiceException->getCode();
                 }
-                
             }
-                
         }
-
-        
     }
 ?>

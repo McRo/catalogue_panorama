@@ -60,15 +60,20 @@
         //search by student
         public function searchBy(Int $idStudent){
             try{
+                echo$idStudent;
                 //connect to the bdd
                 $db= Connection::connect(); 
+                $collected_info =   'student.id, student.id_user, student.nickname, student.bio_short_fr, student.bio_fr, 
+                                    student.facebook, student.twitter, student.website, user.first_name, user.last_name, 
+                                    user.email, artwork.id"id_artwork", artwork.title, artwork.subtitle, artwork.type, artwork.duration, 
+                                    artwork.synopsis_short, artwork.synopsis_long, artwork.thanks, artwork.seen';
 
-                $stmt=$db->prepare("SELECT * FROM student WHERE id=:idStudent");
-                $stmt->bindParam(':idStudent', $idStudent);
+                $stmt=$db->prepare("SELECT $collected_info FROM (student INNER JOIN user ON student.id_user = user.id) 
+                INNER JOIN artwork on student.id= artwork.id_student 
+                WHERE student.id=$idStudent");
                 $stmt->execute();
                 //store the result into data, returns an array indexed by column name 
                 $data = $stmt->fetch(PDO::FETCH_ASSOC);
-                
                 //free the memory
                 $stmt->closeCursor();
                 
@@ -95,6 +100,42 @@
                 //free the memory
                 $stmt->closeCursor();
                 
+                return $data;
+
+            }catch(PDOException $e){
+                throw new DAOException($e->getMessage(), $e->getCode());
+            }
+        }
+
+<<<<<<< HEAD
+
+        //search by user
+        public function searchByUser(Int $idUser){
+=======
+        //search by artwork
+        public function searchByArtwork(int $idArtwork){
+>>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
+            try{
+                //connect to the bdd
+                $db= Connection::connect(); 
+
+<<<<<<< HEAD
+                $stmt=$db->prepare("SELECT * FROM student WHERE id_user=:idUser");
+                $stmt->bindParam(':idUser', $idUser);
+=======
+                $stmt=$db->prepare("SELECT id_student FROM artwork WHERE id=:id_artwork");
+                $stmt->bindParam(':id_artwork', $idArtwork);
+>>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
+                $stmt->execute();
+                //store the result into data, returns an array indexed by column name 
+                $data = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                //free the memory
+                $stmt->closeCursor();
+<<<<<<< HEAD
+                
+=======
+>>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
                 return $data;
 
             }catch(PDOException $e){

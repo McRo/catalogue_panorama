@@ -7,8 +7,13 @@
 
     $mysql_host = "localhost";
     $mysql_database = "panorama";
+<<<<<<< HEAD
     $mysql_user = "panorama_user";
     $mysql_user_password = "pano";
+=======
+    $mysql_user = "root";
+    $mysql_user_password = "";
+>>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
 
     /***
      * 

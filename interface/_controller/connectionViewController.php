@@ -1,6 +1,6 @@
 <?php
     require_once(__DIR__.'/../config.php');
-    
+
     require_once(__DIR__.'/../_class/User.php');
     require_once(__DIR__.'/../_class/Student.php');
 
@@ -20,6 +20,15 @@
     $error = [];
     $error_message = "";
 
+    //reload page if logout is the url
+    if(isset($_GET) && !empty($_GET) && isset($_GET['logout'])){
+
+        //Destroys all data registered to a session
+        session_destroy();
+        header('location: ../_controller/connectionViewController.php');
+    }
+
+
     if(!empty($_POST)){
 
         //get vars from POST
@@ -29,34 +38,34 @@
         // try to get the username
         $userInfoService = new UserInfo();
         $api_data_user = $userInfoService->getUserInfo("$username_or_email");
-        
+
         // if found user with this username or email
         if(!empty($api_data_user)) {
-            
+
             $username = $api_data_user[0]->username;
-            
-            
+
+
             // try to log in
             $authService = new AuthenticationService();
             $auth = $authService->login($username, $password);
             if($auth->status == 200){
 
-                
+
                 // try to get current base User
                 $userService = new UserService();
                 $user = $userService->searchByEmail($auth->user->email);
 
 
-                // if empty, create it 
+                // if empty, create it
                 if(empty($user)){
 
                     // get more user infos with token (in session)
                     $api_data_user = $userInfoService->getUserInfo($auth->user->email)[0];
 
-                    // 
-                    $profile_str = $api_data_user->is_staff?"is_staff":"is_student";      
-                    
-                    
+                    //
+                    $profile_str = $api_data_user->is_superuser?"is_staff":"is_student";
+
+
                     $user = new User();
                     $user->setKartUrl($api_data_user->url)
                          ->setFirstName($api_data_user->first_name)
@@ -67,26 +76,23 @@
                     // CREATE User
                     try{
                            $success=UserService::create($user);
-        
+
                         }catch(ServiceException $serviceException){
                             echo $ServiceException->getCode();
-                            die("User creattion Error");
+                            die("User creation Error");
                         }
-                    
+
                     // get user id
                     $user = $userService->searchByEmail($auth->user->email);
 
-                    var_dump($auth->user->email);
-                    var_dump($user);
-                    die();
+                    // if staff create it
+                    if($api_data_user->is_superuser){
 
-                    // Create staff
-                    if($api_data_user->is_staff){
-                        
                         // CREATE Staff
                         try{
-                            $success=StaffService::create($user->getId());
-        
+                            $success=StaffService::create($user['id']);
+                            echo 'staff created';
+
                         }catch(ServiceException $serviceException){
                             echo $ServiceException->getCode();
                             die("Staff creattion Error");
@@ -102,7 +108,7 @@
 
                         // create obj student
                         $student  = new Student();
-                        $student->setIdUser($user->getId())
+                        $student->setIdUser($user['id'])
                                 ->setNickname($api_data_artist->nickname)
                                 ->setBioShortFr($api_data_artist->bio_short_fr)
                                 ->setBioShortEn($api_data_artist->bio_short_en)
@@ -114,26 +120,45 @@
 
                         try{
                             $success=StudentService::create($student);
-        
+
                         }catch(ServiceException $serviceException){
                             echo $ServiceException->getCode();
                             die("Student creattion Error");
                         }
 
-                        
+                        // user exist
+                        $studentService = new StudentService();
+                        $student = $studentService->searchByUser($user->getId());
+                        $_SESSION['idStudent'] = $student->getId();
 
-                    } // end of student creeation 
+
+
+                    } // end of student creeation
 
                 } // end of user creation
 
-                // user exist
-                $studentService = new StudentService();
-                $student = $studentService->searchByUser($user->getId());
-                $_SESSION['idStudent'] = $student->getId();
+                if($user['profil'] == "is_student"){
 
-                echo "Success ! ";
+                // user exist
+                    $studentService = new StudentService();
+                    $student = $studentService->searchByUser($user->getId());
+                    $_SESSION['idStudent'] = $student->getId();
+
+                }
+
+                echo "Success !! ";
                 var_dump($student);
-                
+
+                //relocation if authentification is successfull
+
+                if ($_SESSION['profil']=='is_student' ) {
+
+                    header('location: ../_controller/studentViewController.php');
+                }elseif($_SESSION['profil']="is_staff"){
+
+                    header('location: ../_controller/adminViewController.php');
+                }
+
             } //  end auth success
             else {
                 $error_message = "Error Auth";
@@ -150,6 +175,6 @@
     else {
         echo "Error Post Empty ! ";
     }
-    
+
     html();
 ?>
