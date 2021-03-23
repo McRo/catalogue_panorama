@@ -53,6 +53,7 @@
                 $short_syn      = htmlentities($_POST['synopsis_short']);
                 $long_syn       = htmlentities($_POST['synopsis_long']);
                 $thanks         = htmlentities($_POST['thanks']);
+                $img            = checkFiles($_FILES);
 
                 //if it's a creation
             if($_GET['action']=="create"){
@@ -78,9 +79,9 @@
                    $success=ArtworkService::create($aw);
                    if($success){
                        //send to the pre load artwork form
-                      header('location: ../_controller/studentViewController'); 
+                      header('location: ../_controller/studentViewController');
                    }
-                   
+
 
                 }catch(ServiceException $serviceException){
                     echo $ServiceException->getCode();
@@ -125,13 +126,13 @@
                     $updated_artwork    ->setTitle($title)->setSubtitle($subtitle)->setType($type)->setDuration($duration)
                                         ->setSynopsisShort($short_syn)->setSynopsisLong($long_syn)
                                         ->setThanks($thanks)->setSeen(0);
-                   
+
                     $success=ArtworkService::update($updated_artwork, $session_artwork_obj->getId());
 
-                    
+
                     //send to the pre load artwork form
-                   
-                    
+
+
 
                 }catch(ServiceException $serviceException){
                     echo $ServiceException->getCode();
