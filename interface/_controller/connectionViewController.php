@@ -107,7 +107,8 @@
 
                         // get infos from api
                         $api_data_artist = $userInfoService->getArtistInfo($auth->user->username);
-                        $api_data_artist= $api_data_artist[0];
+                        $api_data_artist = $api_data_artist[0];
+
 
                         // create obj student
                         $student  = new Student();
@@ -130,9 +131,10 @@
                             die("Student creattion Error");
                         }
 
-                        // user exist
+                        // student  exist
                         $studentService = new StudentService();
                         $student = $studentService->searchByUser($user['id']);
+
                         $_SESSION['idStudent'] = $student['id'];
 
 

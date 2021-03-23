@@ -18,13 +18,10 @@
         header('location: ../_controller/connectionViewController.php?logout');
     }
 
-    ////////////////////////////////////////FAKE INITIALISATION////////////////////
-
     $session_artwork_obj = ArtworkService::searchBy($_SESSION['idStudent']);
     if($session_artwork_obj!=null){
         $list_of_updates    = UpdateService::searchByAwId($session_artwork_obj->getId());
     }
-
 
     //display the global html
     html('Catalogue Panorama - Artiste', null, null, null);
@@ -53,9 +50,9 @@
                 $subtitle       = htmlentities($_POST['subtitle']);
                 $type           = htmlentities($_POST['type']);
                 $duration       = htmlentities($_POST['duration']);
-                $short_syn   = htmlentities($_POST['short_synopsis']);
-                $long_syn    = htmlentities($_POST['long_synopsis']);
-                $thnaks    = htmlentities($_POST['thanks']);
+                $short_syn      = htmlentities($_POST['synopsis_short']);
+                $long_syn       = htmlentities($_POST['synopsis_long']);
+                $thanks         = htmlentities($_POST['thanks']);
 
                 //if it's a creation
             if($_GET['action']=="create"){
@@ -72,7 +69,7 @@
                 $aw = new Artwork();
                 $aw ->setTitle($title)->setSubtitle($subtitle)->setType($type)->setDuration($duration)
                     ->setSynopsisShort($short_syn)->setSynopsisLong($long_syn)
-                    ->setThanks($thnaks)
+                    ->setThanks($thanks)
                     ->setCreatedAt($created_date)->setIdStudent($id_student)->setSeen($seen);
 
                 try{
@@ -90,19 +87,23 @@
             //if it's an update
             elseif($_GET['action']=="edit"){
                 //keep only the comparable values (not id, created_at, id_student and seen)
-                $old_content_array = array_slice((array) $session_artwork_obj, 1, 8);
-                $new_content_array = [$title, $subtitle, $type, $duration, $short_fr_syn, $long_fr_syn, $short_en_syn, $long_en_syn];
+                $old_content_array = array_slice((array) $session_artwork_obj, 1, 7);
+
+                $new_content_array = [$title, $subtitle, $type, $duration, $short_syn, $long_syn, $thanks];
 
                 try{
-
                     //create updates obj
                     $i=0;
                     foreach($old_content_array as $value){
 
+                        //compare index by index
                         if($value != $new_content_array[$i]){
+
                             $input_name = preg_replace('/artwork/i', "", array_search($value, $old_content_array));
+
                             $old_content    =   $value;
                             $new_content    = $new_content_array[$i];
+
                             $updated_at     = date("Y-m-d");
                             $id_artwork     = $session_artwork_obj->getId();
 
@@ -120,6 +121,8 @@
                     $updated_artwork    ->setTitle($title)->setSubtitle($subtitle)->setType($type)->setDuration($duration)
                                         ->setSynopsisShort($short_syn)->setSynopsisLong($long_syn)
                                         ->setThanks($thanks)->setSeen(0);
+                                        print($session_artwork_obj->getId());
+                                        print_r($updated_artwork);
                     $success=ArtworkService::update($updated_artwork, $session_artwork_obj->getId());
 
                 }catch(ServiceException $serviceException){
