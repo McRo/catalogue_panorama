@@ -7,7 +7,7 @@
             global $user_search_url;
 
             // set headers GET
-            $headers = array('Content-Type: application/json');
+            $headers = 'Content-Type: application/json';
 
             // add token if not empty (to have full user infos)
             if ($_SESSION['token'])
@@ -20,10 +20,12 @@
       			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
             // put headers
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
             // execute curl
 			      $response_json = curl_exec($curl);
             // json transform to php vars
             $response =  json_decode($response_json);
+
             // set status for report error
 			      $response->status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             // close connection
@@ -35,7 +37,6 @@
             return $response;
 
 
-
         }
 
 
@@ -44,7 +45,7 @@
             global $artist_search_by_user_url;
 
             // set headers GET
-            $headers = array('Content-Type: application/json');
+            $headers = 'Content-Type: application/json';
 
             // add token if not empty (to have full user infos)
             if ($_SESSION['token'])

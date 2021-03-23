@@ -12,6 +12,7 @@ class AuthenticationService{
         $data = array("username" => $username, "password" => $password);
         // set headers
         $headers = array('Content-Type:multipart/form-data');
+
         // init curl
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $auth_login_url);
