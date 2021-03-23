@@ -107,35 +107,20 @@
             }
         }
 
-<<<<<<< HEAD
-
-        //search by user
-        public function searchByUser(Int $idUser){
-=======
         //search by artwork
         public function searchByArtwork(int $idArtwork){
->>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
             try{
                 //connect to the bdd
                 $db= Connection::connect(); 
 
-<<<<<<< HEAD
-                $stmt=$db->prepare("SELECT * FROM student WHERE id_user=:idUser");
-                $stmt->bindParam(':idUser', $idUser);
-=======
                 $stmt=$db->prepare("SELECT id_student FROM artwork WHERE id=:id_artwork");
                 $stmt->bindParam(':id_artwork', $idArtwork);
->>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
                 $stmt->execute();
                 //store the result into data, returns an array indexed by column name 
                 $data = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 //free the memory
                 $stmt->closeCursor();
-<<<<<<< HEAD
-                
-=======
->>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
                 return $data;
 
             }catch(PDOException $e){

@@ -44,11 +44,7 @@
             }
         }
 
-<<<<<<< HEAD
-        //search one student
-=======
         //search one student by id user
->>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
         public function searchByUser(Int $idUser){
             try{
                 $dao = new StudentDAO();
@@ -60,8 +56,6 @@
             }
         }
 
-<<<<<<< HEAD
-=======
         //search one student by its artwork id
         public static function searchByArtwork($idArtwork){
             try{
@@ -75,7 +69,6 @@
         }
 
 
->>>>>>> 34231c213ce00925720c64984ea61126bcd47d8f
         // public function update(Object $objet, int $idOdbjectToModify){
 
         // }
