@@ -18,7 +18,7 @@
             $thanks            = $artwork->getThanks() ;
             $created_at        = $artwork->getCreatedAt();
             $id_student        = $artwork->getIdStudent();
-            $seen              = $artwork->getSeen() ;
+            $seen              = $artwork->getSeen()?1:0;
 
             try{
                 //connect to the bdd
